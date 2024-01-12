@@ -1,4 +1,4 @@
-name: HCM-Build
+name: Run all unit tests
 
 on:
   workflow_dispatch:
@@ -27,7 +27,7 @@ jobs:
         shell: bash
 
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
         name: Checkout force-di
         with:
           submodules: "true"
