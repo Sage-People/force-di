@@ -17,6 +17,7 @@ env:
   NODE_VERSION: "18"
   ALIAS: "ciorg"
   SFDX_VERSION: "@salesforce/cli" # automation fails if this isn't latest
+  SFDX_ROOT: "./"
 
 jobs:
   build:
@@ -57,8 +58,39 @@ jobs:
           sf project deploy start -o "${{ env.ALIAS }}"
 
       - name: "Run Unit Tests In Scratch Org"
-        run: 
-          sf apex run test -o "${{ env.ALIAS }}" 
+        working-directory: ${{ env.SFDX_ROOT }}
+        run: |
+          mkdir -p apexTestResults/test
+          unittestcommand="sf apex run test  -l RunLocalTests -w 60 -r human -d apexTestResults/test  -o \"${{ env.ALIAS }}\""
+          echo "Test command to be run: $unittestcommand"
+          echo "Running All Apex Tests"
+          bash -c "$unittestcommand" || runFailed="true"
+          echo "finished first test run"
+          if [[ -f apexTestResults/test/test-result.txt ]]; then #1
+            # get list of failed tests | trim for class.test name only
+            failed=$(grep -w Fail apexTestResults/test/test-result.txt | grep fta__ | awk {'print $1'})
+            if [[ -z "$failed" ]]; then #2
+              echo "Tests passed"
+              exit 0
+            else #2
+              echo "Re-running failed tests:"
+              echo "$failed"
+              # Failed tests: trim namespace | to comma-separated list | trim final comma
+              failedTests=$(echo "$failed" | sed s/fta__// | tr '\n' ',' | sed 's/.$//')
+              echo "Test command to be run: $unittestcommand --tests \"$failedTests\""
+              bash -c "$unittestcommand --tests \"$failedTests\"" || failedAgain="true"
+              if [ "${failedAgain}" = "true" ]; then #3
+                echo "\n====++++Apex tests Results++++====\n"
+                junit "**/apexTestResults/test/*-junit.xml"
+                exit 1
+              else #3
+                exit 0
+              fi #3
+            fi #2
+          else #1
+            echo "File apexTestResults/test/test-result.txt not found - tests did not run"
+            exit 1			
+          fi #1
 
       - name: "Delete Scratch Org "
         if: ${{success()}}
