@@ -67,8 +67,9 @@ jobs:
           bash -c "$unittestcommand" || runFailed="true"
           echo "finished first test run"
           if [[ -f apexTestResults/test/test-result.txt ]]; then #1
+            echo "Results found"
             # get list of failed tests | trim for class.test name only
-            failed=$(grep -w Fail apexTestResults/test/test-result.txt | grep fta__ | awk {'print $1'})
+            failed=$(grep -w Fail apexTestResults/test/test-result.txt | grep fHCM2__ | awk {'print $1'})
             if [[ -z "$failed" ]]; then #2
               echo "Tests passed"
               exit 0
@@ -76,7 +77,7 @@ jobs:
               echo "Re-running failed tests:"
               echo "$failed"
               # Failed tests: trim namespace | to comma-separated list | trim final comma
-              failedTests=$(echo "$failed" | sed s/fta__// | tr '\n' ',' | sed 's/.$//')
+              failedTests=$(echo "$failed" | sed s/fHCM2__// | tr '\n' ',' | sed 's/.$//')
               echo "Test command to be run: $unittestcommand --tests \"$failedTests\""
               bash -c "$unittestcommand --tests \"$failedTests\"" || failedAgain="true"
               if [ "${failedAgain}" = "true" ]; then #3
