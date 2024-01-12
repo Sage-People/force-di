@@ -70,6 +70,8 @@ jobs:
             echo "Results found"
             # get list of failed tests | trim for class.test name only
             failed=$(grep -w Fail apexTestResults/test/test-result.txt | grep fHCM2__ | awk {'print $1'})
+            echo "Parsed test results"
+            echo "$failed"
             if [[ -z "$failed" ]]; then #2
               echo "Tests passed"
               exit 0
