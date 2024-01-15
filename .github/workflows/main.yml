@@ -78,4 +78,4 @@ jobs:
       - name: "Delete Scratch Org "
         if: ${{success()}}
         run: |
-            sf org delete scratch -o "${{ env.ALIAS }}" --noprompt
+            sf org delete scratch -o "${{ env.ALIAS }}" --no-prompt
