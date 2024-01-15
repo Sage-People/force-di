@@ -75,9 +75,8 @@ jobs:
             step2=$(grep -F -e 'fHCM2' apexTestResults/test/test-result.txt)
             echo "done step 2"
             echo "$step2"
+            cat apexTestResults/test/test-result.txt
             step3=$(grep -w 'Fail' apexTestResults/test/test-result.txt | grep 'fHCM2')
-            status=$?
-            echo "Exit Status: $status"
             echo "done step 3"
             echo "$step3"
             failed=$(grep -w 'Fail' apexTestResults/test/test-result.txt | grep 'fHCM2' | awk {'print $1'})
