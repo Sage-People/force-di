@@ -5,8 +5,9 @@ if [[ -f apexTestResults/test/test-result.txt ]]; then #1
     echo "$(<apexTestResults/test/step1.txt)"
     grep -v --line-buffered "fHCM2" apexTestResults/test/step1.txt >> apexTestResults/test/step2.txt
     echo "$(<apexTestResults/test/step2.txt)"
-    failed=$(awk {'print $1'} -f apexTestResults/test/step2.txt)            
+    failed=$(awk {'print $1'} apexTestResults/test/step2.txt)            
     echo "Parsed test results"
+    echo "Failed tests = $failed"
     echo "$failed"
     if [[ -z "$failed" ]]; then #2
         echo "Tests passed"
