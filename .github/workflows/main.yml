@@ -3,7 +3,7 @@ name: Run all unit tests
 on:
   workflow_dispatch:
   push:
-    branches: [master, "patches/**"]
+    branches: [master, "patches/**", subs-try]
   pull_request:
   merge_group:
 
