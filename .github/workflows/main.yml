@@ -14,7 +14,7 @@ concurrency:
     cancel-in-progress: ${{ github.event_name != 'push' }}
 
 env:
-  NODE_VERSION: "18"
+  NODE_VERSION: "18.x"
   ALIAS: "ciorg"
   SFDX_VERSION: "@salesforce/cli" # automation fails if this isn't latest
   SFDX_ROOT: "./"
@@ -26,6 +26,7 @@ jobs:
     defaults:
       run:
         shell: bash
+        working-directory: ${{ env.SFDX_ROOT }}
 
     steps:
       - uses: actions/checkout@v4
@@ -34,7 +35,7 @@ jobs:
           submodules: "true"
           token: ${{ secrets.SAGE_PEOPLE_CI_USER_PAT }}
 
-      - uses: actions/setup-node@v2
+      - uses: actions/setup-node@v4
         with:
           node-version: ${{ env.NODE_VERSION }}
 
@@ -58,51 +59,20 @@ jobs:
           sf project deploy start -o "${{ env.ALIAS }}"
 
       - name: "Run Unit Tests In Scratch Org"
-        working-directory: ${{ env.SFDX_ROOT }}
         run: |
           mkdir -p apexTestResults/test
           unittestcommand="sf apex run test  -l RunLocalTests -w 60 -r human -d apexTestResults/test  -o \"${{ env.ALIAS }}\""
           echo "Test command to be run: $unittestcommand"
           echo "Running All Apex Tests"
           bash -c "$unittestcommand" || runFailed="true"
-          echo "finished first test run"
-          if [[ -f apexTestResults/test/test-result.txt ]]; then #1
-            echo "Results found"
-            # get list of failed tests | trim for class.test name only
-            step1=$(grep -w 'Fail' apexTestResults/test/test-result.txt)
-            echo "done step 1"
-            echo "$step1"
-            step2=$(grep -F -e 'fHCM2' apexTestResults/test/test-result.txt)
-            echo "done step 2"
-            echo "$step2"
-            step3=$(grep -w 'Fail' apexTestResults/test/test-result.txt | grep -F -e 'fHCM2')
-            echo "done step 3"
-            echo "$step3"
-            failed=$(grep -w 'Fail' apexTestResults/test/test-result.txt | grep 'fHCM2' | awk {'print $1'})
-            echo "Parsed test results"
-            echo "$failed"
-            if [[ -z "$failed" ]]; then #2
-              echo "Tests passed"
-              exit 0
-            else #2
-              echo "Re-running failed tests:"
-              echo "$failed"
-              # Failed tests: trim namespace | to comma-separated list | trim final comma
-              failedTests=$(echo "$failed" | sed s/fHCM2__// | tr '\n' ',' | sed 's/.$//')
-              echo "Test command to be run: $unittestcommand --tests \"$failedTests\""
-              bash -c "$unittestcommand --tests \"$failedTests\"" || failedAgain="true"
-              if [ "${failedAgain}" = "true" ]; then #3
-                echo "\n====++++Apex tests Results++++====\n"
-                junit "**/apexTestResults/test/*-junit.xml"
-                exit 1
-              else #3
-                exit 0
-              fi #3
-            fi #2
-          else #1
-            echo "File apexTestResults/test/test-result.txt not found - tests did not run"
-            exit 1			
-          fi #1
+          echo "Finished test run"
+
+      - name: "Make the script files executable"
+        run: chmod +x .github/scripts/parse-results.sh
+
+      - name: "Verfify all tests pass"
+        run: |
+            .github/scripts/parse-results.sh
 
       - name: "Delete Scratch Org "
         if: ${{success()}}
