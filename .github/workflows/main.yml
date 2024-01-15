@@ -20,7 +20,9 @@ env:
   SFDX_ROOT: "./"
 
 jobs:
-  build:
+  run-all-unit-tests:
+    name: Run All Unit Tests
+
     runs-on: ubuntu-latest
 
     defaults:
