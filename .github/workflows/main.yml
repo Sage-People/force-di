@@ -71,8 +71,13 @@ jobs:
             # get list of failed tests | trim for class.test name only
             step1=$(grep -w 'Fail' apexTestResults/test/test-result.txt)
             echo "done step 1"
-            step2=$(grep -w 'Fail' apexTestResults/test/test-result.txt | grep -F -e 'fHCM2__')
+            echo "$step1"
+            step2=$(grep -F -e 'fHCM2__' apexTestResults/test/test-result.txt)
             echo "done step 2"
+            echo "$step2"
+            step3=$(grep -w 'Fail' apexTestResults/test/test-result.txt | grep -F -e 'fHCM2__')
+            echo "done step 3"
+            echo "$step3"
             failed=$(grep -w 'Fail' apexTestResults/test/test-result.txt | grep 'fHCM2__' | awk {'print $1'})
             echo "Parsed test results"
             echo "$failed"
