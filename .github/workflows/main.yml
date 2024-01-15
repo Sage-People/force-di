@@ -14,7 +14,7 @@ concurrency:
     cancel-in-progress: ${{ github.event_name != 'push' }}
 
 env:
-  NODE_VERSION: "18"
+  NODE_VERSION: "18.x"
   ALIAS: "ciorg"
   SFDX_VERSION: "@salesforce/cli" # automation fails if this isn't latest
   SFDX_ROOT: "./"
@@ -34,7 +34,7 @@ jobs:
           submodules: "true"
           token: ${{ secrets.SAGE_PEOPLE_CI_USER_PAT }}
 
-      - uses: actions/setup-node@v2
+      - uses: actions/setup-node@v4
         with:
           node-version: ${{ env.NODE_VERSION }}
 
