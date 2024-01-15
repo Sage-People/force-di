@@ -1,9 +1,11 @@
 if [[ -f apexTestResults/test/test-result.txt ]]; then #1
     echo "Results found"
     # get list of failed tests | trim for class.test name only
-    grep -v --line-buffered "Fail" apexTestResults/test/test-result.txt >> apexTestResults/test/step1.txt
+    grep -w "Fail" apexTestResults/test/test-result.txt >> apexTestResults/test/step1.txt
+    echo "Failures"
     echo "$(<apexTestResults/test/step1.txt)"
-    grep -v --line-buffered "fHCM2" apexTestResults/test/step1.txt >> apexTestResults/test/step2.txt
+    grep -w "fHCM2" apexTestResults/test/step1.txt >> apexTestResults/test/step2.txt
+    echo "Failing classes"
     echo "$(<apexTestResults/test/step2.txt)"
     failed=$(awk {'print $1'} apexTestResults/test/step2.txt)            
     echo "Parsed test results"
