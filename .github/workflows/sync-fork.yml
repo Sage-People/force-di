@@ -14,12 +14,12 @@ jobs:
       - name: Checkout force-di
         uses: actions/checkout@v4
         with:
-          # token: ${{ secrets.SAGE_PEOPLE_CI_USER_PAT }}
+          token: ${{ secrets.SAGE_PEOPLE_CI_USER_PAT }}
           fetch-depth: 0
 
       - name: Merge the changes from the upstream default branch
-        env:
-          GH_TOKEN: ${{ secrets.SAGE_PEOPLE_CI_USER_PAT }}
+        # env:
+        #   GH_TOKEN: ${{ secrets.SAGE_PEOPLE_CI_USER_PAT }}
         run: |
           # Set the username and email to match the GitHub Actions bot
           git config user.name 'github-actions[bot]'
