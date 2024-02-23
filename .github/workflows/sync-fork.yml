@@ -11,9 +11,9 @@ jobs:
 
   sync-fork:
     name: Sync Fork
+    runs-on: ubuntu-latest
     needs:
       - main
-    runs-on: ubuntu-latest
 
     steps:
       - name: Checkout force-di
