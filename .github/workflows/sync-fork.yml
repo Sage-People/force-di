@@ -15,6 +15,7 @@ jobs:
         uses: actions/checkout@v4
         with:
           token: ${{ secrets.SAGE_PEOPLE_CI_USER_PAT }}
+          fetch-depth: 0
 
       - name: Merge the changes from the upstream default branch
         env:
