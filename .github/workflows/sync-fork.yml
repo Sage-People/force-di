@@ -8,6 +8,7 @@ on:
 jobs:
   main:
     uses: ./.github/workflows/main.yml
+    secrets: inherit
 
   sync-fork:
     name: Sync Fork
