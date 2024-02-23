@@ -6,7 +6,11 @@ on:
     - cron: "0 0 1 * *" # First day of every month
 
 jobs:
+  main:
+    uses: ./.github/workflows/workflow-2.yml
+
   sync-fork:
+    needs: [main]
     name: Sync Fork
     runs-on: ubuntu-latest
 
