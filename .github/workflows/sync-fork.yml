@@ -1,35 +1,36 @@
 name: Sync fork with parent repo
 
 on:
-  workflow_dispatch: # enable workflow to be started manually
+  workflow_dispatch: # Enable workflow to be started manually
   schedule:
-    - cron: '* * 1 * *' # first day of every month
+    - cron: "0 0 1 * *" # First day of every month
 
-env:
-  SFDX_ROOT: "./"
-    
 jobs:
   sync-fork:
     name: Sync Fork
-
     runs-on: ubuntu-latest
-
-    defaults:
-      run:
-        shell: bash
-        working-directory: ${{ env.SFDX_ROOT }}
 
     steps:
       - name: Checkout force-di
         uses: actions/checkout@v4
         with:
-          submodules: "true"
           token: ${{ secrets.SAGE_PEOPLE_CI_USER_PAT }}
 
       - name: Merge the changes from the upstream default branch
         env:
           GH_TOKEN: ${{ secrets.SAGE_PEOPLE_CI_USER_PAT }}
         run: |
-          gh repo sync 
-    
-  
+          # Add the remote, call it "upstream":
+          git remote add upstream https://github.com/apex-enterprise-patterns/force-di.git
+
+          # Fetch all the branches of that remote into remote-tracking branches
+          git fetch upstream
+
+          # Make sure that we're on your master branch:
+          git checkout master
+
+          # Merge upstream master branch into our local master branch
+          git merge upstream/master
+
+          # Push to remote
+          git push
