@@ -7,10 +7,11 @@ on:
 
 jobs:
   main:
-    uses: ./.github/workflows/workflow-2.yml
+    uses: ./.github/workflows/main.yml
 
   sync-fork:
-    needs: [main]
+    needs:
+      - main
     name: Sync Fork
     runs-on: ubuntu-latest
 
