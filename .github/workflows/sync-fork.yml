@@ -35,4 +35,4 @@ jobs:
           git merge upstream/master
 
           # Push to remote
-          # git push
+          git push
