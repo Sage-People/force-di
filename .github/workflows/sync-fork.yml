@@ -8,11 +8,6 @@ on:
 jobs:
   main:
     uses: ./.github/workflows/main.yml
-    with:
-      SAGE_PEOPLE_CI_USER_PAT: ${{ secrets.SAGE_PEOPLE_CI_USER_PAT }}
-      SAGE_PEOPLE_DEVHUB_SERVER_KEY: ${{ secrets.SAGE_PEOPLE_DEVHUB_SERVER_KEY }}
-      SAGE_PEOPLE_DEVHUB_CONSUMER_KEY: ${{ secrets.SAGE_PEOPLE_DEVHUB_CONSUMER_KEY }}
-      SAGE_PEOPLE_DEVHUB_USERNAME: ${{ secrets.SAGE_PEOPLE_DEVHUB_USERNAME }}
 
   sync-fork:
     name: Sync Fork
