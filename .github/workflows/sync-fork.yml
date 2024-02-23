@@ -10,9 +10,9 @@ jobs:
     uses: ./.github/workflows/main.yml
 
   sync-fork:
+    name: Sync Fork
     needs:
       - main
-    name: Sync Fork
     runs-on: ubuntu-latest
 
     steps:
