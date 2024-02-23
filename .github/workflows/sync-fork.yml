@@ -21,6 +21,10 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.SAGE_PEOPLE_CI_USER_PAT }}
         run: |
+          # Set the username and email to match the GitHub Actions bot
+          git config user.name 'github-actions[bot]'
+          git config user.email 'github-actions[bot]@users.noreply.github.com'
+
           # Add the remote, call it "upstream":
           git remote add upstream https://github.com/apex-enterprise-patterns/force-di.git
 
