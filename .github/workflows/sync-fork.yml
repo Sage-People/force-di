@@ -26,6 +26,9 @@ jobs:
           # Fetch all the branches of that remote into remote-tracking branches
           git fetch upstream
 
+          # Make sure that we're on our current branch:
+          git checkout $GITHUB_REF_NAME
+
           # Merge upstream master branch into our local master branch
           git merge upstream/master
 
